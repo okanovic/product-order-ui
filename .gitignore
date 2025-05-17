@@ -25,3 +25,8 @@ build
 *.sln
 *.sw?
 .vite-cache/
+
+# Environment variables
+local.env
+preprod.env
+prod.env

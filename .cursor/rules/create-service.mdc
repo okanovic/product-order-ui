@@ -1,3 +1,8 @@
+---
+description:
+globs:
+alwaysApply: false
+---
 import ApiService from './ApiService'
 import endpointConfig from '@/configs/endpoint.config'
 import type {
