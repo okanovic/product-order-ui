@@ -7,7 +7,7 @@ const endpointConfig = {
     logout: `${baseUrl}/auth/logout`,
     forgotPassword: `${baseUrl}/auth/forgot-password`,
     resetPassword: `${baseUrl}/auth/reset-password`,
-    refreshToken: `${baseUrl}/auth/refresh-token`,
+    refreshToken: `${baseUrl}/auth/refresh`,
     userDetail: `${baseUrl}/auth/user-detail`,
     products: `${baseUrl}/product/products`,
     createCompanies: `${baseUrl}/companies/create`,
