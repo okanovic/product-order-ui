@@ -55,3 +55,8 @@ export type OauthSignInCallbackPayload = {
     onSignIn: (tokens: Token, user?: User) => void
     redirect: () => void
 }
+
+export type RefreshTokenResponse = {
+    accessToken: string
+    refreshToken: string
+}

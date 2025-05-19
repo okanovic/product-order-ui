@@ -7,6 +7,7 @@ import type {
     ResetPassword,
     SignInResponse,
     SignUpResponse,
+    RefreshTokenResponse,
 } from '@/@types/auth'
 
 export async function apiSignIn(data: SignInCredential) {
@@ -49,7 +50,7 @@ export async function apiResetPassword<T>(data: ResetPassword) {
 }
 
 export async function apiRefreshToken() {
-    return ApiService.fetchDataWithAxios<{ accessToken: string }>({
+    return ApiService.fetchDataWithAxios<RefreshTokenResponse>({
         url: endpointConfig.refreshToken,
         method: 'post',
     })

@@ -17,6 +17,7 @@ interface SignUpFormProps extends CommonProps {
 type SignUpFormSchema = {
     name: string
     surname: string
+    companyName: string
     email: string
     password: string
     confirmPassword: string
@@ -27,6 +28,9 @@ const validationSchema: ZodType<SignUpFormSchema> = z
         email: z.string({ required_error: 'Please enter your email' }),
         name: z.string({ required_error: 'Please enter your name' }),
         surname: z.string({ required_error: 'Please enter your surname' }),
+        companyName: z.string({
+            required_error: 'Please enter your company name',
+        }),
         password: z.string({ required_error: 'Password Required' }),
         confirmPassword: z.string({
             required_error: 'Confirm Password Required',
@@ -108,6 +112,24 @@ const SignUpForm = (props: SignUpFormProps) => {
                         />
                     </FormItem>
                 </div>
+                <FormItem
+                    label="Company Name"
+                    invalid={Boolean(errors.companyName)}
+                    errorMessage={errors.companyName?.message}
+                >
+                    <Controller
+                        name="companyName"
+                        control={control}
+                        render={({ field }) => (
+                            <Input
+                                type="text"
+                                placeholder="Company Name"
+                                autoComplete="off"
+                                {...field}
+                            />
+                        )}
+                    />
+                </FormItem>
                 <FormItem
                     label="Email"
                     invalid={Boolean(errors.email)}
