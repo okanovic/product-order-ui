@@ -21,20 +21,26 @@ const processQueue = (error: any, token: string | null = null) => {
 
 const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
     const { response, config } = error
-    const { setTokens } = useToken()
+    const { setToken, getToken } = useToken()
 
     if (response && unauthorizedCode.includes(response.status)) {
         const originalRequest = config
+
+        console.log('Token expired, attempting refresh...')
 
         if (!isRefreshing) {
             isRefreshing = true
 
             try {
-                // Refresh token ile yeni access token al
+                // Refresh token ile yeni token al
                 const { accessToken, refreshToken } = await apiRefreshToken()
+                console.log('New tokens received:', {
+                    accessToken,
+                    refreshToken,
+                })
 
-                // Yeni token'ı kaydet
-                setTokens(accessToken, refreshToken)
+                // Yeni token'ları kaydet
+                setToken(accessToken)
 
                 // Başarısız olan requestleri tekrar dene
                 processQueue(null, accessToken)
@@ -46,17 +52,18 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                     return axios(originalRequest)
                 }
             } catch (refreshError) {
-                // Refresh token da geçersizse logout yap
+                console.error('Refresh token failed:', refreshError)
                 processQueue(refreshError, null)
-                setTokens('', '')
+                // Token'ları temizle ve logout yap
+                setToken('')
                 useSessionUser.getState().setUser({})
                 useSessionUser.getState().setSessionSignedIn(false)
-                // Login sayfasına yönlendir
                 window.location.href = '/login'
             } finally {
                 isRefreshing = false
             }
         } else {
+            console.log('Refresh already in progress, queueing request...')
             // Eğer refresh işlemi devam ediyorsa, requesti kuyruğa ekle
             return new Promise((resolve, reject) => {
                 failedQueue.push({ resolve, reject })

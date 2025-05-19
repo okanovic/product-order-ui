@@ -21,6 +21,14 @@ export type SignUpCredential = {
     surname: string
     email: string
     password: string
+    company: {
+        name: string
+        address: string
+        city: string
+        state: string
+        zipCode: string
+        country: string
+    }
 }
 
 export type ForgotPassword = {
@@ -48,7 +56,7 @@ export type User = {
 
 export type Token = {
     accessToken: string
-    refereshToken?: string
+    refreshToken: string
 }
 
 export type OauthSignInCallbackPayload = {

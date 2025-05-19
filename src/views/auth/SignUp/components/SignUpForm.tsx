@@ -57,11 +57,24 @@ const SignUpForm = (props: SignUpFormProps) => {
     })
 
     const onSignUp = async (values: SignUpFormSchema) => {
-        const { name, surname, password, email } = values
+        const { name, surname, companyName, password, email } = values
 
         if (!disableSubmit) {
             setSubmitting(true)
-            const result = await signUp({ name, surname, password, email })
+            const result = await signUp({
+                name,
+                surname,
+                company: {
+                    name: companyName,
+                    address: '',
+                    city: '',
+                    state: '',
+                    zipCode: '',
+                    country: '',
+                },
+                password,
+                email,
+            })
 
             if (result?.status === 'failed') {
                 setMessage?.(result.message)
