@@ -69,16 +69,21 @@ export const useSessionUser = create<AuthState & AuthAction>()(
 export const useToken = () => {
     const storage = getPersistStorage()
 
-    const setToken = (token: string) => {
-        storage.setItem('access_token', token)
+    const setToken = (accessToken: string, refreshToken: string) => {
+        storage.setItem('access_token', accessToken)
+        storage.setItem('refresh_token', refreshToken)
     }
 
     const getToken = () => {
-        return storage.getItem('access_token')
+        return {
+            accessToken: storage.getItem('access_token'),
+            refreshToken: storage.getItem('refresh_token'),
+        }
     }
 
     const clearToken = () => {
         storage.removeItem('access_token')
+        storage.removeItem('refresh_token')
     }
 
     return {

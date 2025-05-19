@@ -21,7 +21,7 @@ const processQueue = (error: any, token: string | null = null) => {
 
 const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
     const { response, config } = error
-    const { setToken, getToken } = useToken()
+    const { setToken } = useToken()
 
     if (response && unauthorizedCode.includes(response.status)) {
         const originalRequest = config
@@ -40,7 +40,7 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                 })
 
                 // Yeni token'ları kaydet
-                setToken(accessToken)
+                setToken(accessToken, refreshToken)
 
                 // Başarısız olan requestleri tekrar dene
                 processQueue(null, accessToken)
@@ -55,7 +55,7 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                 console.error('Refresh token failed:', refreshError)
                 processQueue(refreshError, null)
                 // Token'ları temizle ve logout yap
-                setToken('')
+                setToken('', '')
                 useSessionUser.getState().setUser({})
                 useSessionUser.getState().setSessionSignedIn(false)
                 window.location.href = '/login'

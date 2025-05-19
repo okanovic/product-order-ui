@@ -59,8 +59,8 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const handleSignIn = (tokens: Token, user?: User) => {
-        setToken(tokens.accessToken)
-        setTokenState(tokens.accessToken)
+        setToken(tokens.accessToken, tokens.refreshToken)
+        setTokenState(tokens)
         setSessionSignedIn(true)
 
         if (user) {
@@ -69,7 +69,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const handleSignOut = () => {
-        setToken('')
+        setToken('', '')
         setUser({})
         setSessionSignedIn(false)
     }
@@ -79,7 +79,10 @@ function AuthProvider({ children }: AuthProviderProps) {
             const resp = await apiSignIn(values)
             if (resp) {
                 handleSignIn(
-                    { accessToken: resp.token, refreshToken: '' },
+                    {
+                        accessToken: resp.accessToken,
+                        refreshToken: resp.refreshToken,
+                    },
                     resp.user,
                 )
                 redirect()
@@ -106,7 +109,10 @@ function AuthProvider({ children }: AuthProviderProps) {
             const resp = await apiSignUp(values)
             if (resp) {
                 handleSignIn(
-                    { accessToken: resp.token, refreshToken: '' },
+                    {
+                        accessToken: resp.accessToken,
+                        refreshToken: resp.refreshToken,
+                    },
                     resp.user,
                 )
                 redirect()

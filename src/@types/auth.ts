@@ -4,7 +4,8 @@ export type SignInCredential = {
 }
 
 export type SignInResponse = {
-    token: string
+    accessToken: string
+    refreshToken: string
     user: {
         userId: string
         userName: string
