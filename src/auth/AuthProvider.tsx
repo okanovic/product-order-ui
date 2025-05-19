@@ -143,9 +143,26 @@ function AuthProvider({ children }: AuthProviderProps) {
         }
     }
 
-    const getUserDetail = async () => {
-        const resp = await apiUserDetail()
-        console.log(resp)
+    const getUserDetail = async (userId: string) => {
+        try {
+            const resp = await apiUserDetail(userId)
+            if (resp) {
+                setUser(resp)
+                return {
+                    status: 'success',
+                    data: resp,
+                }
+            }
+            return {
+                status: 'failed',
+                message: 'Unable to fetch user details',
+            }
+        } catch (errors: any) {
+            return {
+                status: 'failed',
+                message: errors?.response?.data?.message || errors.toString(),
+            }
+        }
     }
 
     const oAuthSignIn = (

@@ -58,9 +58,9 @@ export async function apiRefreshToken() {
     })
 }
 
-export async function apiUserDetail() {
+export async function apiUserDetail(userId: string) {
     return ApiService.fetchDataWithAxios<UserDetailResponse>({
-        url: endpointConfig.userDetail,
+        url: `${endpointConfig.userDetail}/${userId}`,
         method: 'get',
     })
 }

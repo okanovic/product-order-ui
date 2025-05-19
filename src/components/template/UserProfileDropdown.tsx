@@ -6,6 +6,7 @@ import { Link } from 'react-router'
 import { PiUserDuotone, PiSignOutDuotone } from 'react-icons/pi'
 import { useAuth } from '@/auth'
 import type { JSX } from 'react'
+import { useEffect } from 'react'
 
 type DropdownList = {
     label: string
@@ -17,8 +18,25 @@ const dropdownItemList: DropdownList[] = []
 
 const _UserDropdown = () => {
     const { avatar, userName, email } = useSessionUser((state) => state.user)
+    const { signOut, getUserDetail } = useAuth()
 
-    const { signOut } = useAuth()
+    useEffect(() => {
+        const fetchUserDetail = async () => {
+            console.log('userName: ', userName)
+            if (userName) {
+                const result = await getUserDetail(userName)
+                console.log('result: ', result)
+                /*  if (result.status === 'failed') {
+                    console.error(
+                        'Failed to fetch user details:',
+                        result.message,
+                    )
+                } */
+            }
+        }
+
+        fetchUserDetail()
+    }, [userName, getUserDetail])
 
     const handleSignOut = () => {
         signOut()

@@ -16,7 +16,7 @@ type Auth = {
     oAuthSignIn: (
         callback: (payload: OauthSignInCallbackPayload) => void,
     ) => void
-    getUserDetail: () => void
+    getUserDetail: (userId: string) => {}
 }
 
 const defaultFunctionPlaceHolder = async (): AuthResult => {
@@ -43,7 +43,7 @@ const AuthContext = createContext<Auth>({
     signUp: async () => defaultFunctionPlaceHolder(),
     signOut: () => {},
     oAuthSignIn: defaultOAuthSignInPlaceHolder,
-    getUserDetail: () => {},
+    getUserDetail: async (userId: string) => {},
 })
 
 export default AuthContext
