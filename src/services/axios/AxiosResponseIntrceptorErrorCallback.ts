@@ -1,4 +1,4 @@
-import { useSessionUser, useToken } from '@/store/authStore'
+import { useSessionUser } from '@/store/authStore'
 import type { AxiosError } from 'axios'
 import { apiRefreshToken } from '@/services/AuthService'
 import axios from 'axios'
@@ -21,7 +21,6 @@ const processQueue = (error: any, token: string | null = null) => {
 
 const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
     const { response, config } = error
-    const { setToken } = useToken()
 
     if (response && unauthorizedCode.includes(response.status)) {
         const originalRequest = config
@@ -39,9 +38,6 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                     refreshToken,
                 })
 
-                // Yeni token'ları kaydet
-                setToken(accessToken, refreshToken)
-
                 // Başarısız olan requestleri tekrar dene
                 processQueue(null, accessToken)
 
@@ -55,7 +51,6 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                 console.error('Refresh token failed:', refreshError)
                 processQueue(refreshError, null)
                 // Token'ları temizle ve logout yap
-                setToken('', '')
                 useSessionUser.getState().setUser({})
                 useSessionUser.getState().setSessionSignedIn(false)
                 window.location.href = '/login'

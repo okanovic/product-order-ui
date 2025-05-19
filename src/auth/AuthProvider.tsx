@@ -1,8 +1,13 @@
 import { useRef, useImperativeHandle, useState } from 'react'
 import AuthContext from './AuthContext'
 import appConfig from '@/configs/app.config'
-import { useSessionUser, useToken } from '@/store/authStore'
-import { apiSignIn, apiSignOut, apiSignUp } from '@/services/AuthService'
+import { useSessionUser } from '@/store/authStore'
+import {
+    apiSignIn,
+    apiSignOut,
+    apiSignUp,
+    apiUserDetail,
+} from '@/services/AuthService'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import { useNavigate } from 'react-router'
 import type {
@@ -35,16 +40,15 @@ const IsolatedNavigator = ({ ref }: { ref: Ref<IsolatedNavigatorRef> }) => {
 }
 
 function AuthProvider({ children }: AuthProviderProps) {
+    console.log('AuthProvider')
     const signedIn = useSessionUser((state) => state.session.signedIn)
     const user = useSessionUser((state) => state.user)
     const setUser = useSessionUser((state) => state.setUser)
     const setSessionSignedIn = useSessionUser(
         (state) => state.setSessionSignedIn,
     )
-    const { getToken, setToken } = useToken()
-    const [tokenState, setTokenState] = useState(getToken())
 
-    const authenticated = Boolean(tokenState && signedIn)
+    const authenticated = Boolean(signedIn)
 
     const navigatorRef = useRef<IsolatedNavigatorRef>(null)
 
@@ -59,8 +63,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const handleSignIn = (tokens: Token, user?: User) => {
-        setToken(tokens.accessToken, tokens.refreshToken)
-        setTokenState(tokens)
         setSessionSignedIn(true)
 
         if (user) {
@@ -69,7 +71,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     }
 
     const handleSignOut = () => {
-        setToken('', '')
         setUser({})
         setSessionSignedIn(false)
     }
@@ -142,6 +143,12 @@ function AuthProvider({ children }: AuthProviderProps) {
             navigatorRef.current?.navigate('/')
         }
     }
+
+    const getUserDetail = async () => {
+        const resp = await apiUserDetail()
+        console.log(resp)
+    }
+
     const oAuthSignIn = (
         callback: (payload: OauthSignInCallbackPayload) => void,
     ) => {
@@ -160,6 +167,7 @@ function AuthProvider({ children }: AuthProviderProps) {
                 signUp,
                 signOut,
                 oAuthSignIn,
+                getUserDetail,
             }}
         >
             {children}

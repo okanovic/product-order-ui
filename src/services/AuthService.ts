@@ -8,6 +8,7 @@ import type {
     SignInResponse,
     SignUpResponse,
     RefreshTokenResponse,
+    UserDetailResponse,
 } from '@/@types/auth'
 
 export async function apiSignIn(data: SignInCredential) {
@@ -53,5 +54,12 @@ export async function apiRefreshToken() {
     return ApiService.fetchDataWithAxios<RefreshTokenResponse>({
         url: endpointConfig.refreshToken,
         method: 'post',
+    })
+}
+
+export async function apiUserDetail() {
+    return ApiService.fetchDataWithAxios<UserDetailResponse>({
+        url: endpointConfig.userDetail,
+        method: 'get',
     })
 }

@@ -69,3 +69,16 @@ export type RefreshTokenResponse = {
     accessToken: string
     refreshToken: string
 }
+
+export type UserDetailResponse = {
+    id: number
+    name: string
+    surname: string
+    email: string
+    createdAt: string
+    companies: {
+        id: number
+        name: string
+        isActive: boolean
+    }[]
+}

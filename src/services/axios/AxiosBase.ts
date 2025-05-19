@@ -6,20 +6,21 @@ import type { AxiosError } from 'axios'
 const AxiosBase = axios.create({
     timeout: 60000,
     baseURL: import.meta.env.VITE_API_BASE_URL,
+    withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
-    }
+        Accept: 'application/json',
+    },
 })
 
 // Development ortamında request/response loglaması
 if (import.meta.env.DEV) {
-    AxiosBase.interceptors.request.use(request => {
+    AxiosBase.interceptors.request.use((request) => {
         console.log('Starting Request:', request)
         return request
     })
 
-    AxiosBase.interceptors.response.use(response => {
+    AxiosBase.interceptors.response.use((response) => {
         console.log('Response:', response)
         return response
     })

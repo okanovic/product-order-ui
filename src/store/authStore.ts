@@ -1,6 +1,3 @@
-import cookiesStorage from '@/utils/cookiesStorage'
-import appConfig from '@/configs/app.config'
-import { TOKEN_NAME_IN_STORAGE } from '@/constants/api.constant'
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
 import type { User } from '@/@types/auth'
@@ -17,18 +14,6 @@ type AuthState = {
 type AuthAction = {
     setSessionSignedIn: (payload: boolean) => void
     setUser: (payload: User) => void
-}
-
-const getPersistStorage = () => {
-    if (appConfig.accessTokenPersistStrategy === 'localStorage') {
-        return localStorage
-    }
-
-    if (appConfig.accessTokenPersistStrategy === 'sessionStorage') {
-        return sessionStorage
-    }
-
-    return cookiesStorage
 }
 
 const initialState: AuthState = {
@@ -65,30 +50,3 @@ export const useSessionUser = create<AuthState & AuthAction>()(
         { name: 'sessionUser', storage: createJSONStorage(() => localStorage) },
     ),
 )
-
-export const useToken = () => {
-    const storage = getPersistStorage()
-
-    const setToken = (accessToken: string, refreshToken: string) => {
-        storage.setItem('access_token', accessToken)
-        storage.setItem('refresh_token', refreshToken)
-    }
-
-    const getToken = () => {
-        return {
-            accessToken: storage.getItem('access_token'),
-            refreshToken: storage.getItem('refresh_token'),
-        }
-    }
-
-    const clearToken = () => {
-        storage.removeItem('access_token')
-        storage.removeItem('refresh_token')
-    }
-
-    return {
-        setToken,
-        getToken,
-        clearToken,
-    }
-}
