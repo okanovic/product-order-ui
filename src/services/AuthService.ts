@@ -47,3 +47,10 @@ export async function apiResetPassword<T>(data: ResetPassword) {
         data,
     })
 }
+
+export async function apiRefreshToken() {
+    return ApiService.fetchDataWithAxios<{ accessToken: string }>({
+        url: endpointConfig.refreshToken,
+        method: 'post',
+    })
+}
