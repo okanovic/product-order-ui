@@ -67,14 +67,27 @@ export const useSessionUser = create<AuthState & AuthAction>()(
 )
 
 export const useToken = () => {
-    const storage = getPersistStorage()
-
     const setToken = (token: string) => {
-        storage.setItem(TOKEN_NAME_IN_STORAGE, token)
+        // Access Token için
+        document.cookie = `access_token=${token}; ${getCookieOptions()}`
+    }
+
+    const setRefreshToken = (token: string) => {
+        // Refresh Token için
+        document.cookie = `refresh_token=${token}; ${getCookieOptions()}`
+    }
+
+    const getCookieOptions = () => {
+        const { cookieOptions } = appConfig.tokenConfig
+        return Object.entries(cookieOptions)
+            .map(([key, value]) => `${key}=${value}`)
+            .join('; ')
     }
 
     return {
         setToken,
-        token: storage.getItem(TOKEN_NAME_IN_STORAGE),
+        setRefreshToken,
+        // Token'ları JavaScript ile okuyamayız (httpOnly)
+        // Backend'den gelen response'da token'lar otomatik olarak cookie'lere kaydedilir
     }
 }
