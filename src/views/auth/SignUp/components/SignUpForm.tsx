@@ -15,16 +15,18 @@ interface SignUpFormProps extends CommonProps {
 }
 
 type SignUpFormSchema = {
-    userName: string
-    password: string
+    name: string
+    surname: string
     email: string
+    password: string
     confirmPassword: string
 }
 
 const validationSchema: ZodType<SignUpFormSchema> = z
     .object({
         email: z.string({ required_error: 'Please enter your email' }),
-        userName: z.string({ required_error: 'Please enter your name' }),
+        name: z.string({ required_error: 'Please enter your name' }),
+        surname: z.string({ required_error: 'Please enter your surname' }),
         password: z.string({ required_error: 'Password Required' }),
         confirmPassword: z.string({
             required_error: 'Confirm Password Required',
@@ -51,11 +53,11 @@ const SignUpForm = (props: SignUpFormProps) => {
     })
 
     const onSignUp = async (values: SignUpFormSchema) => {
-        const { userName, password, email } = values
+        const { name, surname, password, email } = values
 
         if (!disableSubmit) {
             setSubmitting(true)
-            const result = await signUp({ userName, password, email })
+            const result = await signUp({ name, surname, password, email })
 
             if (result?.status === 'failed') {
                 setMessage?.(result.message)
@@ -68,24 +70,44 @@ const SignUpForm = (props: SignUpFormProps) => {
     return (
         <div className={className}>
             <Form onSubmit={handleSubmit(onSignUp)}>
-                <FormItem
-                    label="User name"
-                    invalid={Boolean(errors.userName)}
-                    errorMessage={errors.userName?.message}
-                >
-                    <Controller
-                        name="userName"
-                        control={control}
-                        render={({ field }) => (
-                            <Input
-                                type="text"
-                                placeholder="User Name"
-                                autoComplete="off"
-                                {...field}
-                            />
-                        )}
-                    />
-                </FormItem>
+                <div className="flex gap-4">
+                    <FormItem
+                        label="Name"
+                        invalid={Boolean(errors.name)}
+                        errorMessage={errors.name?.message}
+                    >
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    type="text"
+                                    placeholder="User Name"
+                                    autoComplete="off"
+                                    {...field}
+                                />
+                            )}
+                        />
+                    </FormItem>
+                    <FormItem
+                        label="Surname"
+                        invalid={Boolean(errors.surname)}
+                        errorMessage={errors.surname?.message}
+                    >
+                        <Controller
+                            name="surname"
+                            control={control}
+                            render={({ field }) => (
+                                <Input
+                                    type="text"
+                                    placeholder="Surname"
+                                    autoComplete="off"
+                                    {...field}
+                                />
+                            )}
+                        />
+                    </FormItem>
+                </div>
                 <FormItem
                     label="Email"
                     invalid={Boolean(errors.email)}
