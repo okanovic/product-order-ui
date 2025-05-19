@@ -7,6 +7,7 @@ import { PiUserDuotone, PiSignOutDuotone } from 'react-icons/pi'
 import { useAuth } from '@/auth'
 import type { JSX } from 'react'
 import { useEffect } from 'react'
+import { parseJwt } from '@/utils/parstJwt'
 
 type DropdownList = {
     label: string
@@ -18,25 +19,29 @@ const dropdownItemList: DropdownList[] = []
 
 const _UserDropdown = () => {
     const { avatar, userName, email } = useSessionUser((state) => state.user)
+    const accessToken = useSessionUser((state) => state.accessToken)
     const { signOut, getUserDetail } = useAuth()
 
     useEffect(() => {
         const fetchUserDetail = async () => {
-            console.log('userName: ', userName)
-            if (userName) {
-                const result = await getUserDetail(userName)
-                console.log('result: ', result)
-                /*  if (result.status === 'failed') {
-                    console.error(
-                        'Failed to fetch user details:',
-                        result.message,
-                    )
-                } */
+            if (accessToken) {
+                const decoded = parseJwt(accessToken)
+                const userId = decoded?.userId
+                if (userId) {
+                    const result = await getUserDetail(userId)
+                    console.log('result: ', result)
+                    /*  if (result.status === 'failed') {
+                        console.error(
+                            'Failed to fetch user details:',
+                            result.message,
+                        )
+                    } */
+                }
             }
         }
 
         fetchUserDetail()
-    }, [userName, getUserDetail])
+    }, [accessToken, getUserDetail])
 
     const handleSignOut = () => {
         signOut()

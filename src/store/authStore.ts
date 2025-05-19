@@ -9,11 +9,13 @@ type Session = {
 type AuthState = {
     session: Session
     user: User
+    accessToken?: string
 }
 
 type AuthAction = {
     setSessionSignedIn: (payload: boolean) => void
     setUser: (payload: User) => void
+    setAccessToken: (token: string) => void
 }
 
 const initialState: AuthState = {
@@ -26,6 +28,7 @@ const initialState: AuthState = {
         email: '',
         authority: [],
     },
+    accessToken: undefined,
 }
 
 export const useSessionUser = create<AuthState & AuthAction>()(
@@ -46,6 +49,7 @@ export const useSessionUser = create<AuthState & AuthAction>()(
                         ...payload,
                     },
                 })),
+            setAccessToken: (token) => set(() => ({ accessToken: token })),
         }),
         { name: 'sessionUser', storage: createJSONStorage(() => localStorage) },
     ),

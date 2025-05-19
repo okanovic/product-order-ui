@@ -46,6 +46,7 @@ function AuthProvider({ children }: AuthProviderProps) {
     const setSessionSignedIn = useSessionUser(
         (state) => state.setSessionSignedIn,
     )
+    const setAccessToken = useSessionUser((state) => state.setAccessToken)
 
     const authenticated = Boolean(signedIn)
 
@@ -63,7 +64,7 @@ function AuthProvider({ children }: AuthProviderProps) {
 
     const handleSignIn = (tokens: Token, user?: User) => {
         setSessionSignedIn(true)
-
+        setAccessToken(tokens.accessToken)
         if (user) {
             setUser(user)
         }
