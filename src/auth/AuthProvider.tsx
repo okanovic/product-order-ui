@@ -65,9 +65,6 @@ function AuthProvider({ children }: AuthProviderProps) {
     const handleSignIn = (tokens: Token, user?: User) => {
         setSessionSignedIn(true)
         setAccessToken(tokens.accessToken)
-        if (user) {
-            setUser(user)
-        }
     }
 
     const handleSignOut = () => {
@@ -148,6 +145,7 @@ function AuthProvider({ children }: AuthProviderProps) {
         try {
             const resp = await apiUserDetail(userId)
             if (resp) {
+                console.log('resp', resp)
                 setUser(resp)
                 return {
                     status: 'success',

@@ -12,6 +12,8 @@ import type { ZodType } from 'zod'
 import type { CommonProps } from '@/@types/common'
 import type { ReactNode } from 'react'
 
+import { parseJwt } from '@/utils/parstJwt'
+import { useSessionUser } from '@/store/authStore'
 interface SignInFormProps extends CommonProps {
     disableSubmit?: boolean
     passwordHint?: string | ReactNode
@@ -50,7 +52,8 @@ const SignInForm = (props: SignInFormProps) => {
         resolver: zodResolver(validationSchema),
     })
 
-    const { signIn } = useAuth()
+    const { signIn, getUserDetail } = useAuth()
+    const accessToken = useSessionUser((state) => state.accessToken)
 
     const onSignIn = async (values: SignInFormSchema) => {
         const { email, password } = values
@@ -62,12 +65,26 @@ const SignInForm = (props: SignInFormProps) => {
 
             const result = await signIn({ email, password })
             console.log('result', result)
+            await fetchUserDetail()
             if (result?.status === 'failed') {
                 setMessage?.(result.message)
             }
         }
 
         setSubmitting(false)
+    }
+
+    const fetchUserDetail = async () => {
+        if (accessToken) {
+            const decoded = parseJwt(accessToken)
+            const userId = decoded?.userId
+            console.log('userId', userId)
+            if (userId) {
+                const result = getUserDetail(userId)
+
+                console.log('result1: ', result)
+            }
+        }
     }
 
     return (

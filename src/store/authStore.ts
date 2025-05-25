@@ -26,6 +26,7 @@ const initialState: AuthState = {
         avatar: '',
         userName: '',
         email: '',
+        userId: '',
         authority: [],
     },
     accessToken: undefined,

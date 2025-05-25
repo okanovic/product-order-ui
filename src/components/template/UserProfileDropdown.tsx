@@ -19,29 +19,11 @@ const dropdownItemList: DropdownList[] = []
 
 const _UserDropdown = () => {
     const { avatar, userName, email } = useSessionUser((state) => state.user)
-    const accessToken = useSessionUser((state) => state.accessToken)
-    const { signOut, getUserDetail } = useAuth()
+    const { signOut } = useAuth()
 
     useEffect(() => {
-        const fetchUserDetail = async () => {
-            if (accessToken) {
-                const decoded = parseJwt(accessToken)
-                const userId = decoded?.userId
-                if (userId) {
-                    const result = await getUserDetail(userId)
-                    console.log('result: ', result)
-                    /*  if (result.status === 'failed') {
-                        console.error(
-                            'Failed to fetch user details:',
-                            result.message,
-                        )
-                    } */
-                }
-            }
-        }
-
-        fetchUserDetail()
-    }, [accessToken, getUserDetail])
+        console.log('userName: ', email)
+    }, [])
 
     const handleSignOut = () => {
         signOut()
