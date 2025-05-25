@@ -53,7 +53,7 @@ const AxiosResponseIntrceptorErrorCallback = async (error: AxiosError) => {
                 // Token'ları temizle ve logout yap
                 useSessionUser.getState().setUser({})
                 useSessionUser.getState().setSessionSignedIn(false)
-                window.location.href = '/login'
+                window.location.href = '/sign-in'
             } finally {
                 isRefreshing = false
             }
