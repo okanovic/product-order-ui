@@ -58,20 +58,21 @@ const SignInForm = (props: SignInFormProps) => {
     const onSignIn = async (values: SignInFormSchema) => {
         const { email, password } = values
 
-        console.log('values', values)
-
         if (!disableSubmit) {
             setSubmitting(true)
-
-            const result = await signIn({ email, password })
-            console.log('result', result)
-            await fetchUserDetail()
-            if (result?.status === 'failed') {
-                setMessage?.(result.message)
+            try {
+                const result = await signIn({ email, password })
+                await fetchUserDetail()
+                if (result?.status === 'failed') {
+                    setMessage?.(result.message)
+                }
+            } catch (error) {
+                console.error('Sign in error:', error)
+                setMessage?.('An error occurred during sign in')
+            } finally {
+                setSubmitting(false)
             }
         }
-
-        setSubmitting(false)
     }
 
     const fetchUserDetail = async () => {
